@@ -1,4 +1,5 @@
 // Date helpers. All dates are local calendar dates as 'YYYY-MM-DD' strings.
+// gate check (temporary)
 
 export const ymd = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
