@@ -1,4 +1,5 @@
 // Session + operations against Portal das Financas "Faturas e Recibos"
+// Comment-only change (temporary gate check)
 // (irs.portaldasfinancas.gov.pt/recibos). Unofficial: endpoints were
 // observed from the public web app and may change without notice.
 
