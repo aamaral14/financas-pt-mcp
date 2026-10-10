@@ -12,19 +12,19 @@
   <img src="https://img.shields.io/badge/node-%3E%3D20-brightgreen" alt="Node 20+">
 </p>
 
-Servidor [MCP](https://modelcontextprotocol.io) não oficial para o Portal das Finanças, área "Faturas e Recibos" (recibos verdes). Permite a um assistente de IA, como o Claude, consultar as tuas faturas e emitir novas com segurança.
+Servidor [MCP](https://modelcontextprotocol.io) não oficial para o Portal das Finanças, área "Faturas e Recibos" (recibos verdes). Permite a um assistente de IA, como o Claude, consultar os teus recibos verdes e emitir novos com segurança.
 
 > **Não oficial.** Este projeto não tem ligação à Autoridade Tributária e Aduaneira (AT). A AT não tem uma API pública para isto. O servidor usa a mesma aplicação web que usas no browser, por isso pode deixar de funcionar quando o portal mudar. Cada documento emitido é um documento fiscal real. Usa por tua conta e risco.
 
 ## O que faz hoje
 
 **Consultar a tua conta**
-- Lista as faturas e recibos que emitiste, com filtros (datas, cliente, estado). Divide sozinho intervalos maiores que 12 meses.
+- Lista os recibos verdes que emitiste (Faturas, Faturas-Recibo e Recibos, como na página "Consultar" do portal), com filtros (datas, cliente, estado). Divide sozinho intervalos maiores que 12 meses.
 - Mostra o detalhe completo de um documento e descarrega o PDF oficial.
 - Lista os clientes e os produtos/serviços guardados no teu catálogo.
 
 **Emitir uma Fatura-Recibo, em dois passos seguros**
-- Por cópia: mesmo cliente, linhas, IVA e IRS de um documento existente, com uma nova data da transação. Ideal para recibos mensais.
+- Por cópia: mesmo cliente, linhas, IVA e IRS de um documento existente, com uma nova data da transação. Ideal para o recibo verde mensal.
 - De raiz: indicas o NIF do cliente e as linhas. O portal preenche o nome e a morada do cliente e calcula os totais.
 - Primeiro uma pré-visualização, que o servidor das Finanças valida **sem emitir**. Depois, só com a tua confirmação explícita, a emissão real.
 
@@ -48,16 +48,16 @@ Servidor [MCP](https://modelcontextprotocol.io) não oficial para o Portal das F
 | `emit_document` | **Emite** um documento pré-visualizado. Precisa do `previewToken` e de `confirm: true`. | **Sim, emite um documento real** |
 | `last_business_day` | Último dia útil de um mês em Portugal. | Não |
 
-### Exemplo: recibo mensal
+### Exemplo: recibo verde mensal
 
-> "Emite o recibo deste mês para o cliente X, igual ao do mês passado, com a data do último dia útil."
+> "Emite o recibo verde deste mês para o cliente X, igual ao do mês passado, com a data do último dia útil."
 
 1. `list_documents` encontra o documento do mês passado.
 2. `last_business_day` dá a data.
 3. `preview_copy` mostra exatamente o que vai ser emitido.
 4. Aprovas, e `emit_document` emite-o e devolve o novo número.
 
-### Exemplo: recibo novo
+### Exemplo: nova Fatura-Recibo
 
 ```json
 {

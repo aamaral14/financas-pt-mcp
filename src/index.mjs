@@ -24,8 +24,8 @@ server.registerTool('login', {
 }, wrap(() => portal.login()));
 
 server.registerTool('list_documents', {
-  title: 'List issued invoices/receipts',
-  description: 'List Faturas, Faturas-Recibo and Recibos you issued (recibos verdes), newest first. Splits ranges longer than 12 months automatically. Defaults to the last 12 months.',
+  title: 'List issued recibos verdes',
+  description: 'List the recibos verdes you issued (Faturas, Faturas-Recibo and Recibos, as in the portal page Consultar > Bens ou Serviços Prestados), newest first. Splits ranges longer than 12 months automatically. Defaults to the last 12 months.',
   inputSchema: {
     from: date.optional().describe('Issue date from (YYYY-MM-DD)'),
     to: date.optional().describe('Issue date to (YYYY-MM-DD), default today'),

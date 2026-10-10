@@ -12,19 +12,19 @@
   <img src="https://img.shields.io/badge/node-%3E%3D20-brightgreen" alt="Node 20+">
 </p>
 
-Unofficial [MCP](https://modelcontextprotocol.io) server for the Portuguese tax portal (Portal das Finanças), section "Faturas e Recibos" (recibos verdes). It lets an AI assistant such as Claude read your invoices and issue new ones safely.
+Unofficial [MCP](https://modelcontextprotocol.io) server for the Portuguese tax portal (Portal das Finanças), section "Faturas e Recibos" (recibos verdes). It lets an AI assistant such as Claude consult your recibos verdes and issue new ones safely.
 
 > **Unofficial.** This project is not affiliated with the Autoridade Tributária e Aduaneira (AT). The AT has no public API for this. The server drives the same web app you use in the browser, so it can break when the portal changes. Every document it issues is a real tax document. Use it at your own risk.
 
 ## What it does today
 
 **Read your account**
-- List the invoices and receipts you issued, with filters (dates, client, status). Ranges over 12 months are split automatically.
+- List the recibos verdes you issued (Faturas, Faturas-Recibo and Recibos, as in the portal's "Consultar" page), with filters (dates, client, status). Ranges over 12 months are split automatically.
 - Show the full detail of a document and download its official PDF.
 - List the clients and the products/services saved in your catalogue.
 
 **Issue a Fatura-Recibo, in two safe steps**
-- From a copy: the same client, lines, VAT and IRS as an existing document, with a new transaction date. Ideal for monthly receipts.
+- From a copy: the same client, lines, VAT and IRS as an existing document, with a new transaction date. Ideal for a monthly recibo verde.
 - From scratch: you give the client NIF and the lines. The portal fills in the client name and address and calculates the totals.
 - First a preview, which the Finanças server validates **without issuing**. Then, only with your explicit confirmation, the real issue.
 
@@ -48,16 +48,16 @@ Unofficial [MCP](https://modelcontextprotocol.io) server for the Portuguese tax 
 | `emit_document` | **Issues** a previewed document. Needs `previewToken` and `confirm: true`. | **Yes, issues a real document** |
 | `last_business_day` | Last business day of a month in Portugal. | No |
 
-### Example: monthly receipt
+### Example: monthly recibo verde
 
-> "Issue this month's receipt for client X, the same as last month, dated the last business day."
+> "Issue this month's recibo verde for client X, the same as last month, dated the last business day."
 
 1. `list_documents` finds last month's document.
 2. `last_business_day` gives the date.
 3. `preview_copy` shows exactly what will be issued.
 4. You approve, and `emit_document` issues it and returns the new number.
 
-### Example: new receipt
+### Example: new Fatura-Recibo
 
 ```json
 {
