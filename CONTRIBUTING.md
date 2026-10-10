@@ -8,12 +8,17 @@ Thank you for helping. This server issues real tax documents, so the rules below
 
 ### Rule 1: every contribution comes with tests
 
-- Every pull request that changes code in `src/` **must** add or update tests in `test/`.
+Every pull request that changes code in `src/` must include tests. The CI check "Code changes include tests" enforces this:
+
+| Type of change | What the check requires |
+|---|---|
+| New feature or any other change in `src/` | **New** test cases: the number of `test(...)` cases in `test/*.test.mjs` must go up. Editing old tests is not enough. |
+| Bug fix (PR title starts with `fix:` or `fix(scope):`, or label `bug`) | At least one test file in `test/` changed. Updating an existing test so it covers the bug is enough; a new test is welcome but not required. |
+| Only docs or files outside `src/` | Nothing. |
+
 - The tests must fail without your change and pass with it.
-- The CI pipeline runs on every pull request and blocks the merge when:
-  - any test fails on Node 20, 22 or 24, or
-  - `src/` changed but `test/` did not (check "Code changes include tests").
-- Only a maintainer can waive the test rule, with the label `no-tests-needed` (for example, a comment-only change).
+- The pipeline blocks the merge when any test fails on Node 20, 22 or 24, or when the check above fails.
+- Only a maintainer can waive the rule, with the label `no-tests-needed` (for example, a comment-only change in `src/`).
 
 ### Rule 2: tests never touch a real account in CI
 
@@ -47,12 +52,17 @@ Obrigado por ajudares. Este servidor emite documentos fiscais reais, por isso as
 
 ### Regra 1: cada contribuição traz testes
 
-- Cada pull request que altera código em `src/` **tem de** adicionar ou atualizar testes em `test/`.
+Cada pull request que altera código em `src/` tem de trazer testes. A verificação de CI "Code changes include tests" garante isto:
+
+| Tipo de alteração | O que a verificação exige |
+|---|---|
+| Nova funcionalidade ou qualquer outra alteração em `src/` | **Novos** casos de teste: o número de casos `test(...)` em `test/*.test.mjs` tem de aumentar. Editar testes antigos não chega. |
+| Correção de bug (título do PR começa por `fix:` ou `fix(âmbito):`, ou etiqueta `bug`) | Pelo menos um ficheiro de teste em `test/` alterado. Basta atualizar um teste existente para cobrir o bug; um teste novo é bem-vindo mas não obrigatório. |
+| Só documentação ou ficheiros fora de `src/` | Nada. |
+
 - Os testes têm de falhar sem a tua alteração e passar com ela.
-- A pipeline de CI corre em cada pull request e bloqueia o merge quando:
-  - algum teste falha em Node 20, 22 ou 24, ou
-  - `src/` mudou mas `test/` não (verificação "Code changes include tests").
-- Só um maintainer pode dispensar a regra dos testes, com a etiqueta `no-tests-needed` (por exemplo, uma alteração só a comentários).
+- A pipeline bloqueia o merge quando algum teste falha em Node 20, 22 ou 24, ou quando a verificação acima falha.
+- Só um maintainer pode dispensar a regra, com a etiqueta `no-tests-needed` (por exemplo, uma alteração só a comentários em `src/`).
 
 ### Regra 2: os testes nunca usam uma conta real na CI
 

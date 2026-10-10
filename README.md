@@ -142,7 +142,7 @@ claude mcp add financas -- node "$PWD/src/index.mjs"
 
 ## Contributing
 
-Contributions are welcome. Every pull request that changes `src/` must add or update tests, and the CI pipeline blocks the merge if tests fail or are missing. Read [CONTRIBUTING.md](CONTRIBUTING.md) before you open a pull request.
+Contributions are welcome. Every pull request that changes `src/` needs tests: new features must add new test cases, bug fixes (title `fix:`) may update an existing test instead. The CI pipeline blocks the merge if tests fail or are missing. Read [CONTRIBUTING.md](CONTRIBUTING.md) before you open a pull request.
 
 ## How it works
 

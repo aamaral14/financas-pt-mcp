@@ -4,7 +4,8 @@
 
 ## Tests / Testes
 
-- [ ] I added or updated tests in `test/` that fail without this change. / Adicionei ou atualizei testes em `test/` que falham sem esta alteração.
+- [ ] New feature: I added **new** test cases that fail without this change. / Nova funcionalidade: adicionei **novos** casos de teste que falham sem esta alteração.
+- [ ] Bug fix (title starts with `fix:`): I added or updated a test that reproduces the bug. / Correção de bug (título começa por `fix:`): adicionei ou atualizei um teste que reproduz o bug.
 - [ ] `npm test` passes locally. / `npm test` passa localmente.
 - [ ] If this touches the portal flow, I ran `npm run test:live` with my own account and it **did not issue** any document. / Se mexe no fluxo do portal, corri `npm run test:live` com a minha conta e **não emitiu** nenhum documento.
 

@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
   push:
     branches: [main]
 
@@ -39,23 +40,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Require test changes when src/ changes
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Require tests for source changes
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
+          TITLE: ${{ github.event.pull_request.title }}
           LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-        run: |
-          changed=$(git diff --name-only "$BASE" "$HEAD")
-          echo "Changed files:"; echo "$changed"
-          if echo "$changed" | grep -q '^src/'; then
-            if echo "$changed" | grep -q '^test/'; then
-              echo "OK: source changes come with test changes."
-            elif echo ",$LABELS," | grep -q ',no-tests-needed,'; then
-              echo "OK: maintainer marked this PR 'no-tests-needed'."
-            else
-              echo "::error::This PR changes src/ but adds or updates no tests in test/. See CONTRIBUTING.md."
-              exit 1
-            fi
-          else
-            echo "OK: no source changes."
-          fi
+        run: node .github/scripts/check-tests.mjs

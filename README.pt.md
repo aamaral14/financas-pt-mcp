@@ -142,7 +142,7 @@ claude mcp add financas -- node "$PWD/src/index.mjs"
 
 ## Contribuir
 
-Contribuições são bem-vindas. Cada pull request que altera `src/` tem de adicionar ou atualizar testes, e a pipeline de CI bloqueia o merge se os testes falharem ou faltarem. Lê o [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrires um pull request.
+Contribuições são bem-vindas. Cada pull request que altera `src/` precisa de testes: novas funcionalidades têm de adicionar novos casos de teste, correções de bugs (título `fix:`) podem atualizar um teste existente. A pipeline de CI bloqueia o merge se os testes falharem ou faltarem. Lê o [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrires um pull request.
 
 ## Como funciona
 
