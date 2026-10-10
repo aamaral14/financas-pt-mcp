@@ -1,0 +1,46 @@
+{
+  "name": "financas-pt-mcp",
+  "version": "0.1.0",
+  "description": "Unofficial MCP server for Portal das Finanças (Portugal): list, read, download and issue recibos verdes (Faturas-Recibo) safely.",
+  "main": "src/index.mjs",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "test": "node --test test/dates.test.mjs",
+    "test:live": "node test/live-readonly.mjs",
+    "postinstall": "playwright install chromium"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "portugal",
+    "portal-das-financas",
+    "recibos-verdes",
+    "fatura-recibo",
+    "autoridade-tributaria",
+    "efatura"
+  ],
+  "author": "aamaral14",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "playwright": "^1.64.0",
+    "zod": "^4.6.5"
+  },
+  "type": "module",
+  "bin": {
+    "financas-pt-mcp": "src/index.mjs"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "README.pt.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aamaral14/financas-pt-mcp.git"
+  }
+}
