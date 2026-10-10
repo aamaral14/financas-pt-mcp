@@ -2,7 +2,6 @@ name: CI
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
   push:
     branches: [main]
 
@@ -28,25 +27,6 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Syntax check
-        run: for f in src/*.mjs test/*.mjs; do node --check "$f"; done
+        run: for f in src/*.mjs test/*.mjs .github/scripts/*.mjs; do node --check "$f"; done
       - name: Unit and MCP protocol tests
         run: npm test
-
-  tests-required:
-    name: Code changes include tests
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Require tests for source changes
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-          TITLE: ${{ github.event.pull_request.title }}
-          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-        run: node .github/scripts/check-tests.mjs

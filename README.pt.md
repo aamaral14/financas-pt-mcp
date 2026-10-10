@@ -137,12 +137,12 @@ claude mcp add financas -- node "$PWD/src/index.mjs"
 
 | Comando | O que verifica | Corre na CI |
 |---|---|---|
-| `npm test` | Testes unitários (datas, feriados, janelas de 12 meses, validação de dados, hash da pré-visualização) e testes do protocolo MCP (lista de ferramentas, marcações de segurança, recusas). Sem browser, sem rede, sem credenciais. | Sim, em cada pull request, Node 20, 22 e 24 |
+| `npm test` | Testes unitários (datas, feriados, janelas de 12 meses, validação de dados, hash da pré-visualização) , testes do protocolo MCP (lista de ferramentas, marcações de segurança, recusas) e testes das regras dos PRs. Sem browser, sem rede, sem credenciais. | Sim, em cada pull request, Node 20, 22 e 24 |
 | `npm run test:live` | Teste só de leitura no portal real com as tuas credenciais: login, listas, detalhe, PDF, as duas pré-visualizações, catálogo inalterado. **Nunca emite.** Define `TEST_CLIENT_NIF` para incluir o `preview_new`. | Não, só no teu computador |
 
 ## Contribuir
 
-Contribuições são bem-vindas. Cada pull request que altera `src/` precisa de testes: novas funcionalidades têm de adicionar novos casos de teste, correções de bugs (título `fix:`) podem atualizar um teste existente. A pipeline de CI bloqueia o merge se os testes falharem ou faltarem. Lê o [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrires um pull request.
+Contribuições são bem-vindas. Os títulos dos PRs têm um tipo (`feat:`, `fix:`, `refactor:`...). Funcionalidades novas têm de adicionar casos de teste, correções podem atualizar um teste existente, e refactors, documentação e alterações só a comentários não precisam de testes novos. A pipeline de CI bloqueia o merge se os testes falharem, ou faltarem quando fazem sentido. Lê o [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrires um pull request.
 
 ## Como funciona
 

@@ -137,12 +137,12 @@ claude mcp add financas -- node "$PWD/src/index.mjs"
 
 | Command | What it checks | Runs in CI |
 |---|---|---|
-| `npm test` | Unit tests (dates, holidays, 12-month windows, input validation, preview hash) and MCP protocol tests (tool list, safety annotations, refusals). No browser, no network, no credentials. | Yes, on every pull request, Node 20, 22 and 24 |
+| `npm test` | Unit tests (dates, holidays, 12-month windows, input validation, preview hash) MCP protocol tests (tool list, safety annotations, refusals) and tests of the PR rules. No browser, no network, no credentials. | Yes, on every pull request, Node 20, 22 and 24 |
 | `npm run test:live` | Read-only run against the real portal with your credentials: login, lists, detail, PDF, both previews, catalogue unchanged. **Never issues.** Set `TEST_CLIENT_NIF` to include `preview_new`. | No, only on your machine |
 
 ## Contributing
 
-Contributions are welcome. Every pull request that changes `src/` needs tests: new features must add new test cases, bug fixes (title `fix:`) may update an existing test instead. The CI pipeline blocks the merge if tests fail or are missing. Read [CONTRIBUTING.md](CONTRIBUTING.md) before you open a pull request.
+Contributions are welcome. PR titles use a type (`feat:`, `fix:`, `refactor:`...). New features must add new test cases, bug fixes may update an existing test, and refactors, docs and comment-only changes need no new tests. The CI pipeline blocks the merge if tests fail, or are missing where they make sense. Read [CONTRIBUTING.md](CONTRIBUTING.md) before you open a pull request.
 
 ## How it works
 

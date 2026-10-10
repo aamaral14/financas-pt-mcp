@@ -5,7 +5,7 @@
   "main": "src/index.mjs",
   "scripts": {
     "start": "node src/index.mjs",
-    "test": "node --test test/unit.test.mjs test/mcp.test.mjs",
+    "test": "node --test test/unit.test.mjs test/mcp.test.mjs test/gate.test.mjs",
     "test:live": "node test/live-readonly.mjs",
     "postinstall": "node -e \"process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD||require('child_process').execSync('npx playwright install chromium',{stdio:'inherit'})\""
   },
