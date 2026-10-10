@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { lastBusinessDayPT, twelveMonthWindows, easterSunday, ymd } from '../src/dates.mjs';
 import { payloadHash } from '../src/portal.mjs';
 
-test('easter', () => {
+test('easter sunday', () => {
   assert.equal(ymd(easterSunday(2026)), '2026-04-05');
   assert.equal(ymd(easterSunday(2029)), '2029-04-01');
 });
