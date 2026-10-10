@@ -30,3 +30,17 @@ test('payload hash ignores isToValidate only', () => {
   assert.equal(payloadHash({ a: 1, isToValidate: true }), payloadHash({ a: 1, isToValidate: false }));
   assert.notEqual(payloadHash({ a: 1 }), payloadHash({ a: 2 }));
 });
+
+import { normalizeNewSpec } from '../src/portal.mjs';
+
+test('normalizeNewSpec accepts a valid spec with defaults', () => {
+  const s = normalizeNewSpec({ transactionDate: '2026-01-30', clientNif: '123456789', lines: [{ description: 'Dev', quantity: 1, unitPrice: 200, vatRate: 0, exemptionCode: '133' }] });
+  assert.equal(s.irsRegime, 'none');
+  assert.deepEqual(s.lines[0], { kind: 'S', unit: 'N/A', quantity: 1, unitPrice: 200, vatRate: 0, exemptionCode: '133', description: 'Dev', reference: 'Dev' });
+});
+
+test('normalizeNewSpec rejects bad input with all reasons', () => {
+  assert.throws(() => normalizeNewSpec({ clientNif: '12', lines: [{ description: '', quantity: 0.0001, unitPrice: 1.234, vatRate: 0 }], irsRegime: 'on_100' }),
+    (e) => /9-digit/.test(e.message) && /quantity/.test(e.message) && /unitPrice/.test(e.message) && /exemptionCode is required/.test(e.message) && /irsRate is required/.test(e.message));
+  assert.throws(() => normalizeNewSpec({ clientNif: '123456789', lines: [{ description: 'x', quantity: 1, unitPrice: 1, vatRate: 23, exemptionCode: '133' }] }), /only applies when vatRate is 0/);
+});

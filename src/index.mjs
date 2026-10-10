@@ -4,11 +4,11 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { Portal } from './portal.mjs';
+import { Portal, IRS_REGIMES, UNITS } from './portal.mjs';
 import { lastBusinessDayPT } from './dates.mjs';
 
 const portal = new Portal({ headless: process.env.FINANCAS_HEADLESS !== '0' });
-const server = new McpServer({ name: 'financas-pt-mcp', version: '0.1.0' });
+const server = new McpServer({ name: 'financas-pt-mcp', version: '0.2.0' });
 
 const ok = (data) => ({ content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] });
 const wrap = (fn) => async (args) => {
@@ -36,6 +36,20 @@ server.registerTool('list_documents', {
   annotations: { readOnlyHint: true, openWorldHint: true },
 }, wrap((a) => portal.listDocuments(a)));
 
+server.registerTool('list_clients', {
+  title: 'List saved clients',
+  description: 'Clients saved in your Faturas e Recibos catalogue.',
+  inputSchema: { status: z.enum(['active', 'inactive']).optional() },
+  annotations: { readOnlyHint: true, openWorldHint: true },
+}, wrap(({ status }) => portal.listCatalog('clients', status === 'inactive' ? 'I' : 'A')));
+
+server.registerTool('list_products', {
+  title: 'List saved products/services',
+  description: 'Products, services and others saved in your Faturas e Recibos catalogue.',
+  inputSchema: { status: z.enum(['active', 'inactive']).optional() },
+  annotations: { readOnlyHint: true, openWorldHint: true },
+}, wrap(({ status }) => portal.listCatalog('products', status === 'inactive' ? 'I' : 'A')));
+
 server.registerTool('get_document', {
   title: 'Get document detail',
   description: 'Full detail of one document (issuer, client, lines, VAT, IRS, totals) by its internal id (the "id" from list_documents).',
@@ -55,7 +69,7 @@ server.registerTool('download_pdf', {
 
 server.registerTool('preview_copy', {
   title: 'Preview a copy of a document with a new date',
-  description: 'Prepare a new document identical to an existing one (same client, lines, VAT and IRS), changing only the transaction date. The Finanças server validates it, but NOTHING is issued. Returns a summary, possible duplicates and a previewToken for emit_copy. Show the summary to the user before issuing.',
+  description: 'Prepare a new document identical to an existing one (same client, lines, VAT and IRS), changing only the transaction date. The Finanças server validates it, but NOTHING is issued. Returns a summary, possible duplicates and a previewToken for emit_document. Show the summary to the user before issuing.',
   inputSchema: {
     sourceId: z.number().int().describe('Internal id of the document to copy (from list_documents)'),
     transactionDate: date.describe('Transaction (service) date for the new document; cannot be in the future'),
@@ -63,16 +77,40 @@ server.registerTool('preview_copy', {
   annotations: { readOnlyHint: true, openWorldHint: true },
 }, wrap((a) => portal.previewCopy(a)));
 
-server.registerTool('emit_copy', {
+server.registerTool('preview_new', {
+  title: 'Preview a NEW Fatura-Recibo (from scratch)',
+  description: 'Fill a new Fatura-Recibo in the portal form (client, lines, VAT, IRS) and have the Finanças server validate it. NOTHING is issued. The portal fills the client name and address from the NIF and computes the totals. Returns a summary, possible duplicates and a previewToken for emit_document. Show the summary to the user before issuing. Mainland VAT rates only; Portuguese clients only.',
+  inputSchema: {
+    transactionDate: date.describe('Transaction (service) date; cannot be in the future'),
+    clientNif: z.string().regex(/^\d{9}$/).describe('Client Portuguese NIF (9 digits)'),
+    lines: z.array(z.object({
+      description: z.string().min(1),
+      reference: z.string().optional().describe('Short reference; defaults to the description'),
+      kind: z.enum(['service', 'product', 'other']).optional().describe('Default service'),
+      quantity: z.number().positive().describe('Up to 3 decimals'),
+      unit: z.enum(Object.keys(UNITS)).optional().describe('Default N/A'),
+      unitPrice: z.number().positive().describe('Unit price WITHOUT VAT, up to 2 decimals'),
+      vatRate: z.union([z.literal(23), z.literal(13), z.literal(6), z.literal(0)]),
+      exemptionCode: z.string().optional().describe('Required when vatRate is 0. Portal code, e.g. "133" = article 53 CIVA (regime de isenção). If invalid, the error lists the valid codes.'),
+    })).min(1),
+    irsRegime: z.enum(Object.keys(IRS_REGIMES)).optional().describe('Default "none" (Sem retenção - Art.101º, n.º1 do CIRS). Use on_100 with irsRate for withholding.'),
+    irsRate: z.number().optional().describe('Withholding rate in %, e.g. 23 or 11.5; only with irsRegime on_*'),
+    notes: z.string().optional().describe('Observações printed on the document'),
+    activity: z.string().optional().describe('Activity name exactly as registered, when you have more than one'),
+  },
+  annotations: { readOnlyHint: true, openWorldHint: true },
+}, wrap((a) => portal.previewNew(a)));
+
+server.registerTool('emit_document', {
   title: 'ISSUE the previewed document',
-  description: 'Issue the document prepared by preview_copy. This creates a REAL tax document at the Autoridade Tributária. Only call it after the user explicitly approved the preview. Re-checks that the document matches the preview and refuses duplicates for the same client and date unless allowDuplicate is true.',
+  description: 'Issue the document prepared by preview_copy or preview_new. This creates a REAL tax document at the Autoridade Tributária. Only call it after the user explicitly approved the preview. Re-checks that the document matches the preview and refuses duplicates for the same client and date unless allowDuplicate is true.',
   inputSchema: {
     previewToken: z.string(),
     confirm: z.literal(true).describe('Must be true: the user approved issuing this document'),
     allowDuplicate: z.boolean().optional(),
   },
   annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
-}, wrap((a) => portal.emitCopy(a)));
+}, wrap((a) => portal.emit(a)));
 
 server.registerTool('last_business_day', {
   title: 'Last business day of a month (Portugal)',

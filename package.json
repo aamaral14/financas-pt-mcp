@@ -1,13 +1,13 @@
 {
   "name": "financas-pt-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Unofficial MCP server for Portal das Finanças (Portugal): list, read, download and issue recibos verdes (Faturas-Recibo) safely.",
   "main": "src/index.mjs",
   "scripts": {
     "start": "node src/index.mjs",
-    "test": "node --test test/dates.test.mjs",
+    "test": "node --test test/unit.test.mjs test/mcp.test.mjs",
     "test:live": "node test/live-readonly.mjs",
-    "postinstall": "playwright install chromium"
+    "postinstall": "node -e \"process.env.PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD||require('child_process').execSync('npx playwright install chromium',{stdio:'inherit'})\""
   },
   "keywords": [
     "mcp",
@@ -32,6 +32,7 @@
   },
   "files": [
     "src",
+    "assets",
     "README.md",
     "README.pt.md",
     "LICENSE"

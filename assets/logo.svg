@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">financas-pt-mcp</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f5132"/>
+      <stop offset="1" stop-color="#198754"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- receipt -->
+  <path d="M150 96h212v300l-26.5-18-26.5 18-26.5-18-26.5 18-26.5-18-26.5 18-26.5-18-27 18z" fill="#ffffff"/>
+  <rect x="182" y="140" width="148" height="18" rx="9" fill="#198754"/>
+  <rect x="182" y="184" width="104" height="12" rx="6" fill="#adb5bd"/>
+  <rect x="182" y="212" width="124" height="12" rx="6" fill="#adb5bd"/>
+  <rect x="182" y="240" width="88" height="12" rx="6" fill="#adb5bd"/>
+  <rect x="182" y="290" width="148" height="4" rx="2" fill="#dee2e6"/>
+  <text x="330" y="336" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#0f5132">€</text>
+  <!-- MCP connector -->
+  <circle cx="392" cy="392" r="62" fill="#ffc107" stroke="#0f5132" stroke-width="10"/>
+  <path d="M366 378h18v-18M418 406h-18v18" fill="none" stroke="#0f5132" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M384 360l16 16M400 424l-16-16" fill="none" stroke="#0f5132" stroke-width="12" stroke-linecap="round"/>
+</svg>

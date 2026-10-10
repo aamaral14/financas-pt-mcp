@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22, 24]
+    env:
+      # Offline tests never start a browser and never contact the portal.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Syntax check
+        run: for f in src/*.mjs test/*.mjs; do node --check "$f"; done
+      - name: Unit and MCP protocol tests
+        run: npm test
+
+  tests-required:
+    name: Code changes include tests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require test changes when src/ changes
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          changed=$(git diff --name-only "$BASE" "$HEAD")
+          echo "Changed files:"; echo "$changed"
+          if echo "$changed" | grep -q '^src/'; then
+            if echo "$changed" | grep -q '^test/'; then
+              echo "OK: source changes come with test changes."
+            elif echo ",$LABELS," | grep -q ',no-tests-needed,'; then
+              echo "OK: maintainer marked this PR 'no-tests-needed'."
+            else
+              echo "::error::This PR changes src/ but adds or updates no tests in test/. See CONTRIBUTING.md."
+              exit 1
+            fi
+          else
+            echo "OK: no source changes."
+          fi
